@@ -9,14 +9,14 @@ const getProvinsiById = async (id) => {
 };
 const createProvinsi = async (nama) => {
  const result = await pool.query(
- 'INSERT INTO provinsi (nama) VALUES ($1) RETURNING *',
+ 'INSERT INTO provinsi (nama_provinsi) VALUES ($1) RETURNING *',
  [nama]
  );
  return result.rows[0];
 };
 const updateProvinsi = async (id, nama) => {
  const result = await pool.query(
- 'UPDATE provinsi SET nama = $1 WHERE id = $2 RETURNING *',
+ 'UPDATE provinsi SET nama_provinsi = $1 WHERE id = $2 RETURNING *',
  [nama, id]
  );
  return result.rows[0];
