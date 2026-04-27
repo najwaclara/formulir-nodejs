@@ -42,36 +42,40 @@ export default function PesertaForm({ initialData = null, isEdit = false }) {
   }, []);
 
   useEffect(() => {
-  if (initialData) {
-    setForm({
-      nama: initialData.nama || '',
-      tempatlahir: initialData.tempatlahir || '',   // ✅ lowercase
-      tanggallahir: initialData.tanggallahir
-        ? initialData.tanggallahir.substring(0, 10)
-        : '',                                        // ✅ lowercase
-      agama: initialData.agama || '',
-      alamat: initialData.alamat || '',
-      telepon: initialData.telpon || '',             // ✅ backend pakai 'telpon'
-      jk: initialData.jk?.toString() || '',
-      hobi: initialData.hobi || '',
-      foto: initialData.foto || '',
-      idkabko: initialData.kabkot_id || '',
-    });
+    if (initialData) {
+      setForm({
+        nama: initialData.nama || '',
+        tempatlahir: initialData.tempatlahir || '',
+        tanggallahir: initialData.tanggallahir
+          ? initialData.tanggallahir.substring(0, 10)
+          : '',
+        agama: initialData.agama || '',
+        alamat: initialData.alamat || '',
+        telepon: initialData.telpon || '',
+        jk: initialData.jk?.toString() || '',
+        hobi: initialData.hobi || '',
+        foto: initialData.foto || '',
+        idkabko: initialData.kabkot_id || '',
+      });
+      setSelectedProvinsi(initialData.provinsi_id?.toString() || '');
+    }
+  }, [initialData]);
 
-    setSelectedProvinsi(initialData.provinsi_id || '');
-  }
-}, [initialData]);
+  // Load kabko saat edit
+  useEffect(() => {
+    if (selectedProvinsi) {
+      getKabkoByProvinsi(selectedProvinsi).then(setKabko).catch(console.error);
+    }
+  }, [selectedProvinsi]);
 
   async function handleProvinsiChange(e) {
     const idProvinsi = e.target.value;
     setSelectedProvinsi(idProvinsi);
     setForm((prev) => ({ ...prev, idkabko: '' }));
-
     if (!idProvinsi) {
       setKabko([]);
       return;
     }
-
     try {
       const data = await getKabkoByProvinsi(idProvinsi);
       setKabko(data);
@@ -82,28 +86,24 @@ export default function PesertaForm({ initialData = null, isEdit = false }) {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // Sesuaikan nama field dengan yang diharapkan backend
     const payload = {
-  nama: form.nama,
-  tempatlahir: form.tempatlahir,
-  tanggallahir: form.tanggallahir || null,  // ✅ kirim null kalau kosong
-  agama: form.agama,
-  alamat: form.alamat,
-  telpon: form.telepon,
-  jk: form.jk ? parseInt(form.jk) : null,
-  hobi: form.hobi,
-  foto: form.foto,
-  idkabko: form.idkabko || null,
-};
+      nama: form.nama,
+      tempatlahir: form.tempatlahir,
+      tanggallahir: form.tanggallahir || null,
+      agama: form.agama,
+      alamat: form.alamat,
+      telpon: form.telepon,
+      jk: form.jk ? parseInt(form.jk) : null,
+      hobi: form.hobi,
+      foto: form.foto,
+      idkabko: form.idkabko || null,
+    };
 
     try {
       if (isEdit && initialData?.id) {
@@ -113,7 +113,6 @@ export default function PesertaForm({ initialData = null, isEdit = false }) {
         await createPeserta(payload);
         alert('Data berhasil ditambahkan');
       }
-
       router.push('/peserta');
       router.refresh();
     } catch (error) {
@@ -186,7 +185,7 @@ export default function PesertaForm({ initialData = null, isEdit = false }) {
             <option value="">-- Pilih Provinsi --</option>
             {provinsi.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.nama}
+                {item.nama_provinsi}
               </option>
             ))}
           </select>
@@ -198,7 +197,7 @@ export default function PesertaForm({ initialData = null, isEdit = false }) {
             <option value="">-- Pilih Kabko --</option>
             {kabko.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.nama}
+                {item.nama_kabkot}
               </option>
             ))}
           </select>
