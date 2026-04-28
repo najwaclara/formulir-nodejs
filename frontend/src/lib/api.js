@@ -6,11 +6,81 @@ export async function getProvinsi() {
   return res.json();
 }
 
+export async function getProvinsiById(id) {
+  const res = await fetch(`${API_URL}/provinsi/${id}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error('Gagal mengambil detail provinsi');
+  return res.json();
+}
+
+export async function createProvinsi(data) {
+  const res = await fetch(`${API_URL}/provinsi`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Gagal menambah provinsi');
+  return res.json();
+}
+
+export async function updateProvinsi(id, data) {
+  const res = await fetch(`${API_URL}/provinsi/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Gagal mengubah provinsi');
+  return res.json();
+}
+
+export async function deleteProvinsi(id) {
+  const res = await fetch(`${API_URL}/provinsi/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Gagal menghapus provinsi');
+  return res.json();
+}
+
+export async function getKabko() {
+  const res = await fetch(`${API_URL}/kabko`, { cache: 'no-store' });
+  if (!res.ok) throw new Error('Gagal mengambil kabko');
+  return res.json();
+}
+
+export async function getKabkoById(id) {
+  const res = await fetch(`${API_URL}/kabko/${id}`, { cache: 'no-store' });
+  if (!res.ok) throw new Error('Gagal mengambil detail kabko');
+  return res.json();
+}
+
 export async function getKabkoByProvinsi(idProvinsi) {
   const res = await fetch(`${API_URL}/kabko/provinsi/${idProvinsi}`, {
     cache: 'no-store',
   });
   if (!res.ok) throw new Error('Gagal mengambil kabko');
+  return res.json();
+}
+
+export async function createKabko(data) {
+  const res = await fetch(`${API_URL}/kabko`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Gagal menambah kabko');
+  return res.json();
+}
+
+export async function updateKabko(id, data) {
+  const res = await fetch(`${API_URL}/kabko/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Gagal mengubah kabko');
+  return res.json();
+}
+
+export async function deleteKabko(id) {
+  const res = await fetch(`${API_URL}/kabko/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Gagal menghapus kabko');
   return res.json();
 }
 
@@ -47,9 +117,7 @@ export async function updatePeserta(id, data) {
 }
 
 export async function deletePeserta(id) {
-  const res = await fetch(`${API_URL}/peserta/${id}`, {
-    method: 'DELETE',
-  });
+  const res = await fetch(`${API_URL}/peserta/${id}`, { method: 'DELETE' });
   if (!res.ok) throw new Error('Gagal menghapus peserta');
   return res.json();
 }
